@@ -1,0 +1,19 @@
+{{define "content"}}
+<h1>{{.Data.Poll.Title}}</h1>
+<p>This poll has closed. {{people .Data.Voters}} rated at least one photo. The highest average comes first.</p>
+<div class="items">
+{{range .Data.Items}}
+<article class="item">
+  <img src="/images/{{.PhotoID}}" width="{{.Width}}" height="{{.Height}}" loading="lazy" alt="Photo {{.Number}}">
+  <div class="caption">
+    <h2>Photo {{.Number}}</h2>
+    {{if .Description}}<p>{{.Description}}</p>{{end}}
+  </div>
+  <p class="total">
+    {{if .Count}}<strong>{{average .Average}} ★</strong> average from {{plural .Count "rating"}}{{else}}No ratings{{end}}
+    {{if $.Data.Voter}}{{if .Own}}<br><span class="muted">You gave it {{.Own}} ★</span>{{end}}{{end}}
+  </p>
+</article>
+{{end}}
+</div>
+{{end}}

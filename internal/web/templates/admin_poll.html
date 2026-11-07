@@ -1,0 +1,62 @@
+{{define "content"}}
+<p><a href="/admin">← All polls</a></p>
+<h1>{{.Data.Poll.Title}} <span class="badge">{{.Data.Poll.State}}</span></h1>
+{{if .Data.Added}}<p class="notice" role="status">Added {{plural .Data.Added "photo"}}.</p>{{end}}
+{{if .Data.Failures}}
+<div class="notice error" role="alert">
+  <p>Some files weren't added:</p>
+  <ul>{{range .Data.Failures}}<li>{{.}}</li>{{end}}</ul>
+</div>
+{{end}}
+
+{{if .Data.CanUpload}}
+<section class="panel">
+  <h2>Add photos</h2>
+  <p>JPEG or PNG, up to 40 MB each. Export in sRGB, because colour profiles are removed along with all other metadata. Photos can only be added or removed while the poll is a draft, because ratings depend on them.</p>
+  <form class="stack" method="post" action="/admin/polls/{{.Data.Poll.ID}}/photos" enctype="multipart/form-data">
+    <input type="file" name="photos" accept="image/jpeg,image/png" multiple required>
+    <button>Upload</button>
+  </form>
+</section>
+<form method="post" action="/admin/polls/{{.Data.Poll.ID}}/open"><button>Open for voting</button></form>
+{{else if eq .Data.Poll.State "open"}}
+<form method="post" action="/admin/polls/{{.Data.Poll.ID}}/close"><button>Close voting and show results</button></form>
+{{else}}
+<form method="post" action="/admin/polls/{{.Data.Poll.ID}}/reopen"><button>Reopen voting</button></form>
+{{end}}
+
+{{if .Data.ShowTotals}}<p>{{people .Data.Voters}} rated at least one photo.</p>{{end}}
+
+<div class="items">
+{{range .Data.Items}}
+<article class="item">
+  <img src="/images/{{.PhotoID}}" width="{{.Width}}" height="{{.Height}}" loading="lazy" alt="Photo {{.Number}}">
+  <div class="caption"><h2>Photo {{.Number}}</h2></div>
+  {{if $.Data.ShowTotals}}
+  <p class="total">{{if .Count}}<strong>{{average .Average}} ★</strong> average from {{plural .Count "rating"}}{{else}}No ratings yet{{end}}</p>
+  {{end}}
+  {{if $.Data.Editable}}
+  <form class="stack" method="post" action="/admin/items/{{.ID}}/description">
+    <label for="d-{{.ID}}">Description for voters (optional)</label>
+    <textarea id="d-{{.ID}}" name="description" rows="2" maxlength="{{$.Data.MaxDescription}}">{{.Description}}</textarea>
+    <button class="secondary">Save description</button>
+  </form>
+  {{else if .Description}}
+  <p>{{.Description}}</p>
+  {{end}}
+  {{if $.Data.CanUpload}}
+  <form method="post" action="/admin/items/{{.ID}}/delete"><button class="secondary danger">Remove photo</button></form>
+  {{end}}
+</article>
+{{end}}
+</div>
+
+<section class="panel danger-zone">
+  <h2>Delete this poll</h2>
+  <p>This permanently removes its photos and ratings. It can't be undone, and there are no backups.</p>
+  <form class="stack" method="post" action="/admin/polls/{{.Data.Poll.ID}}/delete">
+    <label class="check"><input type="checkbox" name="confirm" value="yes" required> Yes, delete it for good</label>
+    <button class="danger">Delete poll</button>
+  </form>
+</section>
+{{end}}

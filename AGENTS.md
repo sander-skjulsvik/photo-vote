@@ -14,7 +14,7 @@ Everything committed here, including git history, branches and PR text, is publi
 - **Secrets:** client secrets, the voter hash secret, API tokens, private keys, `.env` or `.tfvars` files. Example values must be obviously fake
 - **Details of the owner's network or infrastructure:** internal IP addresses and ranges, cluster names, node names and hardware
 - **Links or IDs from any private service**, such as a photo library
-- **Personal context**, such as what a poll is for, which dating app it relates to, or real poll titles and photo descriptions
+- **Personal context**, such as why the owner is running a poll, or real poll titles and photo descriptions
 
 This also applies to code comments, test data, examples, logs pasted into issues, commit messages and PR descriptions.
 
