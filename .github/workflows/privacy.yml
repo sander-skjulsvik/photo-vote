@@ -1,0 +1,33 @@
+name: Privacy checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  blocked-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Fail on image, database and secret files
+        run: |
+          pattern='\.(jpe?g|png|heic|heif|webp|gif|tiff?|bmp|raf|arw|cr2|nef|dng|db|db-wal|db-shm|sqlite3?|dump|tfvars|pem|key)$|(^|/)\.env(\.|$)'
+          if git ls-files | grep -iE "$pattern"; then
+            echo "These files must not be committed. See AGENTS.md."
+            exit 1
+          fi
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

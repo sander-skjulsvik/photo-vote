@@ -1,0 +1,39 @@
+# Runtime data: never commit. Databases hold ratings and photos.
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+/data/
+/tmp/
+
+# Photos of any kind. Tests generate their images in code.
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.heif
+*.webp
+*.gif
+*.tif
+*.tiff
+*.raf
+*.arw
+*.cr2
+*.nef
+*.dng
+
+# Secrets and local configuration
+.env
+.env.*
+*.tfvars
+*.pem
+*.key
+
+# Build output and editor files
+/bin/
+/photo-vote
+/devserver
+.vscode/
+.idea/
+.claude/
