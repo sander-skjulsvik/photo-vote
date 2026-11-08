@@ -1,0 +1,18 @@
+{{define "content"}}
+<h1>Polls</h1>
+{{if .Data.Open}}
+<h2>Open for rating</h2>
+<ul class="polls">
+  {{range .Data.Open}}<li><a href="/polls/{{.ID}}">{{.Title}}</a></li>{{end}}
+</ul>
+{{end}}
+{{if .Data.Closed}}
+<h2>Closed, with results</h2>
+<ul class="polls">
+  {{range .Data.Closed}}<li><a href="/polls/{{.ID}}">{{.Title}}</a></li>{{end}}
+</ul>
+{{end}}
+{{if not (or .Data.Open .Data.Closed)}}
+<p>There are no polls right now.</p>
+{{end}}
+{{end}}

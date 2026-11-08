@@ -1,0 +1,47 @@
+{{define "content"}}
+<h1>{{.Data.Poll.Title}}</h1>
+{{if .Data.Saved}}<p class="notice" role="status">Your ratings are saved. You can change them until the poll closes.</p>{{end}}
+{{if .Data.CanRate}}
+<p>Give each photo 1 to 5 stars, then press <strong>Save ratings</strong>. You can skip any you like, and come back to change your ratings until the poll closes.</p>
+<details class="privacy">
+  <summary>Who can see my ratings?</summary>
+  <p>Nobody on this site can see who gave which rating. Results only show each photo's average and how many people rated it. Voters see them once the poll closes, and the owner can see them while it's open.</p>
+  <p>This isn't fully anonymous. Your ratings have to stay linked to your account so you can change them, so the owner could work out who rated what, either from the data or by watching the totals change as you vote. The site itself never shows this.</p>
+</details>
+<form class="rating-form" method="post" action="/polls/{{.Data.Poll.ID}}/ratings">
+{{else}}
+<p>You're the owner and not a voter, so you can look at this poll but not rate it. Totals are on the <a href="/admin/polls/{{.Data.Poll.ID}}">manage page</a>.</p>
+{{end}}
+<div class="items">
+{{range .Data.Items}}
+{{$item := .}}
+<article class="item">
+  <img src="/images/{{.PhotoID}}" width="{{.Width}}" height="{{.Height}}" loading="lazy" alt="Photo {{.Number}}">
+  <div class="caption">
+    <h2>Photo {{.Number}}</h2>
+    {{if .Description}}<p>{{.Description}}</p>{{end}}
+  </div>
+  {{if $.Data.CanRate}}
+  <fieldset class="stars">
+    <legend>Your rating for photo {{.Number}}</legend>
+    <div class="star-row">
+      {{range .Stars}}
+      <input type="radio" id="r-{{$item.ID}}-{{.Value}}" name="rating_{{$item.ID}}" value="{{.Value}}"{{if .Checked}} checked{{end}}>
+      <label class="star" for="r-{{$item.ID}}-{{.Value}}" title="{{.Label}}"><span class="sr">{{.Label}}</span><span aria-hidden="true">★</span></label>
+      {{end}}
+      <input type="radio" id="r-{{$item.ID}}-0" name="rating_{{$item.ID}}" value="0"{{if not .Score}} checked{{end}}>
+      <label class="clear" for="r-{{$item.ID}}-0">No rating</label>
+    </div>
+  </fieldset>
+  {{end}}
+</article>
+{{end}}
+</div>
+{{if .Data.CanRate}}
+<div class="save-bar">
+  <span><span class="live-count"><span class="saved-count">{{.Data.Rated}}</span></span> of {{len .Data.Items}} rated</span>
+  <button>Save ratings</button>
+</div>
+</form>
+{{end}}
+{{end}}

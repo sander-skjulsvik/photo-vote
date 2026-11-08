@@ -1,0 +1,14 @@
+{{define "content"}}
+<h1>Manage polls</h1>
+<form class="stack" method="post" action="/admin/polls">
+  <label for="title">New poll title</label>
+  <input id="title" name="title" required maxlength="120">
+  <button>Create draft</button>
+</form>
+{{if .Data.Polls}}
+<h2>All polls</h2>
+<ul class="polls">
+  {{range .Data.Polls}}<li><a href="/admin/polls/{{.ID}}">{{.Title}}</a> <span class="badge">{{.State}}</span></li>{{end}}
+</ul>
+{{end}}
+{{end}}
